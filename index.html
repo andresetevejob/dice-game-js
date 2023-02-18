@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Game </title>
+    </head>
+    <body>
+        <div class="container">
+            <div>
+                <div>NEW GAME</div>
+                <div class="game_board">
+                    <div class="player_1">
+                        PLAYER 1 <span id="current_one">current</span>
+                        <div>
+                           gain courant <span id="player_one_reward">0</span>
+                        </div>
+                        <div style="background-color: crimson;">
+                           hold <span id="player_one_hold">0</span>
+                         </div>
+                    </div>
+                    <div class="button_game">
+                        <button id="rollDice" onclick="play()">Roll dice</button>
+                        <div>
+                            numéro du dé <span id="dice_number">1</span>
+                        </div>
+                        <button id="hold" onclick="hold()">Hold</button>
+                    </div>
+                    <div class="player_2">
+                        PLAYER 2 <span id="current_two">current</span>
+                        <div>
+                            gain  courant <span id="player_two_reward">0</span>
+                         </div>
+                         <div style="background-color: crimson;">
+                            hold <span id="player_two_hold">0</span>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <style>
+        .current{
+            color: red;
+        }
+        .container{
+            background-color: red;
+        }
+        .game_board{
+            background-color: black;
+            display: flex;
+        }
+        .player_1{
+            background-color: aqua;
+            width: 40%;
+            height: 300px;
+        }
+        .button_game{
+            background-color: chocolate;
+            width: 20%;
+        }
+        .player_2{
+            background-color: bisque;
+            width: 40%;
+        }
+    </style>
+    <script>
+        let currentPlayer = 0;
+        let currentPlayerStyleOne = document.getElementById("current_one");
+        let currentPlayerStyleTwo = document.getElementById("current_two");
+        let diceNumberElement = document.getElementById("dice_number");
+        let rewardsPlayerOne = document.getElementById("player_one_reward");
+        let rewardsPlayerTwo = document.getElementById("player_two_reward");
+        let holdPlayerOne = document.getElementById("player_one_hold");
+        let holdPlayerTwo = document.getElementById("player_two_hold");
+
+        let players = [
+                {
+                    "label": "Player 1",
+                    "currentReward": 0,
+                    "backUpReward":0
+                },
+                {
+                    "label": "Player 2",
+                    "currentReward": 0,
+                    "backUpReward":0
+                }
+            ]
+        function init(){
+            
+            showCurrentPlayer();
+            diceNumberElement.innerHTML = 6
+        }
+        init();
+        function showCurrentPlayer(){
+            if(currentPlayer==0){
+                currentPlayerStyleOne.style.display="block";
+                currentPlayerStyleTwo.style.display="none";
+            }else{
+                currentPlayerStyleOne.style.display="none";
+                currentPlayerStyleTwo.style.display="block";
+            }
+        }
+        function play(){
+            const rndInt = randomIntFromInterval(1, 6);
+            diceNumberElement.innerHTML = rndInt
+            console.log(rndInt);
+            if(rndInt==1){
+              initRound();  
+              changePlayer();
+            }else{
+                rewards(rndInt);
+            }
+            console.log("current Player"+currentPlayer);
+        }
+        function changePlayer(){
+            if(currentPlayer==1){
+                currentPlayer = 0;
+            }else{
+                currentPlayer = 1; 
+            }
+            showCurrentPlayer();
+        }
+        function rewards(point){
+            players[currentPlayer].currentReward = players[currentPlayer].currentReward + point
+            if(currentPlayer==0){
+                rewardsPlayerOne.innerText = players[currentPlayer].currentReward;
+            }else{
+                rewardsPlayerTwo.innerText = players[currentPlayer].currentReward;
+            }
+        }
+        function hold(){
+            players[currentPlayer].backUpReward = players[currentPlayer].backUpReward + players[currentPlayer].currentReward
+            players[currentPlayer].currentReward = 0;
+            const holdReward =  players[currentPlayer].backUpReward;
+            if(currentPlayer==0){
+                holdPlayerOne.innerText = holdReward;
+                rewardsPlayerOne.innerText =0;
+            }else{
+                holdPlayerTwo.innerText = holdReward;
+                rewardsPlayerTwo.innerText =0;
+            }
+            changePlayer();
+            
+        }
+        function randomIntFromInterval(min, max) { // min and max included 
+            return Math.floor(Math.random() * (max - min + 1) + min)
+        }
+        function initRound(){
+            players[currentPlayer].currentReward = 0
+            if(currentPlayer==0){
+                rewardsPlayerOne.innerText = players[currentPlayer].currentReward;
+            }else{
+                rewardsPlayerTwo.innerText = players[currentPlayer].currentReward;
+            }
+        }
+    </script>
+</html>
